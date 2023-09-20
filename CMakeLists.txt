@@ -6,18 +6,7 @@ message("Copyright (C) 2014-2018 Carlos Mastalli, <carlos.mastalli@laas.fr>")
 message("All rights reserved.")
 message("Released under the BSD 3-Clause License.")
 
-
-
-find_package(catkin REQUIRED COMPONENTS
-  dwl
-  roscpp
-  rospy
-  geometry_msgs
-  tf
-  tf_conversions
-  message_generation)
-
-catkin_python_setup()
+find_package(catkin REQUIRED COMPONENTS message_generation message_runtime std_msgs geometry_msgs sensor_msgs)
 
 add_message_files(
    FILES
@@ -44,33 +33,5 @@ generate_messages(
    
 
 catkin_package(
-  INCLUDE_DIRS  include
-  LIBRARIES  ${PROJECT_NAME}
-  CATKIN_DEPENDS  roscpp message_runtime geometry_msgs dwl)
+  CATKIN_DEPENDS message_runtime geometry_msgs)
 
-
-# Setting flags for optimization
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
-set(CMAKE_BUILD_TYPE "Release")
-
-
-include_directories(include)
-include_directories(${catkin_INCLUDE_DIRS})
-include_directories(${dwl_INCLUDE_DIRS})
-
-link_directories(${catkin_LIBRARY_DIRS})
-link_directories(${dwl_LIBRARY_DIRS})
-
-## Declare a cpp library
-add_library(${PROJECT_NAME}  src/WholeBodyStateInterface.cpp
-                             src/ReducedBodyStateInterface.cpp
-                             src/ControllerCommons.cpp
-                             src/PlannerCommons.cpp)
-target_link_libraries(${PROJECT_NAME}  ${catkin_LIBRARIES}
-                                       ${dwl_LIBRARIES})
-add_dependencies(${PROJECT_NAME}  ${dwl_msgs_EXPORTED_TARGETS})
-
-install(DIRECTORY ${CMAKE_SOURCE_DIR}/include/
-            DESTINATION DESTINATION include
-            FILES_MATCHING PATTERN "*.h*")
-install(TARGETS dwl_msgs LIBRARY DESTINATION lib)
